@@ -13,6 +13,14 @@ cache:
   paths:
     - node_modules/
 
+debug_job:
+  stage: build
+  image: node:18
+  script:
+    - env | sort
+  rules:
+    - when: always
+
 build:
   stage: build
   image: node:18
