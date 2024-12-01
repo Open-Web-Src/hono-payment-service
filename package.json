@@ -2,9 +2,9 @@
   "name": "hono-social-services",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy --minify",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
-    "build": "echo 'No build step needed for this project.'"
+    "build": "echo 'No build step needed for this project.'",
+    "test": "echo 'No testing step needed for this project.'"
   },
   "dependencies": {
     "hono": "^4.6.12"
