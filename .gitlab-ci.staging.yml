@@ -1,21 +1,23 @@
 build_staging:
   extends: .build_template
-  variables:
-    TARGET_BRANCH: staging
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "staging"'
 
 test_staging:
   extends: .test_template
   dependencies:
     - build_staging
-  variables:
-    TARGET_BRANCH: staging
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
 
 deploy_staging:
   extends: .deploy_template
   dependencies:
     - build_staging
   variables:
-    TARGET_BRANCH: staging
     NODE_ENV: staging
     CF_API_TOKEN: $STAGE_CF_API_TOKEN
     CF_ACCOUNT_ID: $STAGE_CF_ACCOUNT_ID
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "staging"'
