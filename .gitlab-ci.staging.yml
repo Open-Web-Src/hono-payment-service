@@ -2,16 +2,20 @@ build_staging:
   extends: .build_template
   variables:
     TARGET_BRANCH: staging
-    NODE_ENV: staging
 
 test_staging:
   extends: .test_template
+  dependencies:
+    - build_staging
   variables:
     TARGET_BRANCH: staging
 
 deploy_staging:
   extends: .deploy_template
+  dependencies:
+    - build_staging
   variables:
     TARGET_BRANCH: staging
+    NODE_ENV: staging
     CF_API_TOKEN: $STAGE_CF_API_TOKEN
     CF_ACCOUNT_ID: $STAGE_CF_ACCOUNT_ID

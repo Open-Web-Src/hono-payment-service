@@ -2,16 +2,20 @@ build_development:
   extends: .build_template
   variables:
     TARGET_BRANCH: develop
-    NODE_ENV: development
 
 test_development:
   extends: .test_template
+  dependencies:
+    - build_development
   variables:
     TARGET_BRANCH: develop
 
 deploy_development:
   extends: .deploy_template
+  dependencies:
+    - build_development
   variables:
     TARGET_BRANCH: develop
+    NODE_ENV: development
     CF_API_TOKEN: $DEV_CF_API_TOKEN
     CF_ACCOUNT_ID: $DEV_CF_ACCOUNT_ID

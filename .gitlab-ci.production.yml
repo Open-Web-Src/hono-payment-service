@@ -2,16 +2,20 @@ build_production:
   extends: .build_template
   variables:
     TARGET_BRANCH: main
-    NODE_ENV: production
 
 test_production:
   extends: .test_template
+  dependencies:
+    - build_production
   variables:
     TARGET_BRANCH: main
 
 deploy_production:
   extends: .deploy_template
+  dependencies:
+    - build_production
   variables:
     TARGET_BRANCH: main
+    NODE_ENV: production
     CF_API_TOKEN: $PROD_CF_API_TOKEN
     CF_ACCOUNT_ID: $PROD_CF_ACCOUNT_ID
