@@ -1,51 +1,21 @@
-stages:
-  - build
-  - test
-  - deploy
+build_staging:
+  extends: .build_template
+  variables:
+    TARGET_BRANCH: staging
 
-variables:
-  NODE_ENV: staging
-  CF_API_TOKEN: $STAGE_CF_API_TOKEN  # Set in GitLab CI/CD variables
-  CF_ACCOUNT_ID: $STAGE_CF_ACCOUNT_ID  # Set in GitLab CI/CD variables
-
-cache:
-  key: "$CI_COMMIT_REF_NAME-$(sha256sum package-lock.json | cut -d' ' -f1)"
-  paths:
-    - node_modules/
-
-build:
-  stage: build
-  image: node:18
-  before_script:
-    - npm install
-  script:
-    - npm run build
-  artifacts:
-    paths:
-      - dist/
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "staging"'
-
-test:
-  stage: test
-  image: node:18
+test_staging:
+  extends: .test_template
   dependencies:
-    - build
-  script:
-    - npm run test
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
+    - build_staging
+  variables:
+    TARGET_BRANCH: staging
 
-deploy:
-  stage: deploy
-  image: node:18
+deploy_staging:
+  extends: .deploy_template
   dependencies:
-    - build
-  before_script:
-    - npm install -g wrangler
-    - export CLOUDFLARE_API_TOKEN=$CF_API_TOKEN
-  script:
-    - npx wrangler deploy --minify --env staging
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "staging"'
+    - build_staging
+  variables:
+    TARGET_BRANCH: staging
+    NODE_ENV: staging
+    CF_API_TOKEN: $STAGE_CF_API_TOKEN
+    CF_ACCOUNT_ID: $STAGE_CF_ACCOUNT_ID
