@@ -13,6 +13,16 @@ cache:
   paths:
     - node_modules/
 
+debug:
+  stage: build
+  image: node:18
+  script:
+    - echo "Pipeline source: $CI_PIPELINE_SOURCE"
+    - echo "Commit branch: $CI_COMMIT_REF_NAME"
+    - echo "Target branch: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+  rules:
+    - when: always
+
 build:
   stage: build
   image: node:18
