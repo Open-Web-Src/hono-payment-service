@@ -17,9 +17,7 @@ debug_job:
   stage: build
   image: node:18
   script:
-    - echo "Pipeline source: ${CI_PIPELINE_SOURCE:-undefined}"
-    - echo "Commit branch: ${CI_COMMIT_REF_NAME:-undefined}"
-    - echo "Target branch: ${CI_MERGE_REQUEST_TARGET_BRANCH_NAME:-undefined}"
+    - env | sort
   rules:
     - when: always
 
