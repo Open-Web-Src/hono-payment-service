@@ -1,0 +1,4 @@
+include:
+  - local: .gitlab-ci.development.yml
+  - local: .gitlab-ci.staging.yml
+  - local: .gitlab-ci.production.yml
