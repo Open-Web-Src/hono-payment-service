@@ -26,7 +26,7 @@ default:
   script:
     - npm run build
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "${TARGET_BRANCH}"'
+    # - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "${TARGET_BRANCH}"'
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "${TARGET_BRANCH}"'
 
 .test_template:
