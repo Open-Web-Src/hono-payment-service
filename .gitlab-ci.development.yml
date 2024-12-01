@@ -17,9 +17,9 @@ debug_job:
   stage: build
   image: node:18
   script:
-    - echo "Pipeline source: $CI_PIPELINE_SOURCE"
-    - echo "Commit branch: $CI_COMMIT_REF_NAME"
-    - echo "Target branch: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+    - echo 'Pipeline source'
+    - echo 'Commit branch'
+    - echo 'Target branch'
   rules:
     - when: always
 
