@@ -1,0 +1,39 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  NODE_ENV: development
+  CF_API_TOKEN: $DEV_CF_API_TOKEN  # Set in GitLab CI/CD variables
+  CF_ACCOUNT_ID: $DEV_CF_ACCOUNT_ID  # Set in GitLab CI/CD variables
+
+cache:
+  key: "$CI_COMMIT_REF_NAME-$(sha256sum package-lock.json | cut -d' ' -f1)"
+  paths:
+    - node_modules/
+
+build:
+  stage: build
+  image: node:18
+  before_script:
+    - npm install
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_REF_NAME == "develop"'
+
+deploy:
+  stage: deploy
+  image: node:18
+  dependencies:
+    - build
+  before_script:
+    - npm install -g wrangler
+    - echo $CF_API_TOKEN | npx wrangler config --api-key
+  script:
+    - npx wrangler publish --env development
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_REF_NAME == "develop"'

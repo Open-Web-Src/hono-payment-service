@@ -1,0 +1,22 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "hono-social-services"
+main = "src/index.ts"
+compatibility_date = "2024-11-27"
+
+# Workers Logs
+# Docs: https://developers.cloudflare.com/workers/observability/logs/workers-logs/
+# Configuration: https://developers.cloudflare.com/workers/observability/logs/workers-logs/#enable-workers-logs
+[observability]
+enabled = true
+
+[env.development]
+name = "hono-social-services-dev"
+vars = { ENV = "development" }
+
+[env.staging]
+name = "hono-social-services-staging"
+vars = { ENV = "staging" }
+
+[env.production]
+name = "hono-social-services-prod"
+vars = { ENV = "production" }
