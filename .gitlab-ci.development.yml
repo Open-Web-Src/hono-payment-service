@@ -1,5 +1,6 @@
 stages:
   - build
+  - test
   - deploy
 
 variables:
@@ -23,7 +24,18 @@ build:
     paths:
       - dist/
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_REF_NAME == "develop"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "develop"'
+
+test:
+  stage: test
+  image: node:18
+  dependencies:
+    - build
+  script:
+    - npm run test
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"'
 
 deploy:
   stage: deploy
@@ -32,8 +44,8 @@ deploy:
     - build
   before_script:
     - npm install -g wrangler
-    - echo $CF_API_TOKEN | npx wrangler config --api-key
+    - export CLOUDFLARE_API_TOKEN=$CF_API_TOKEN
   script:
-    - npx wrangler publish --env development
+    - npx wrangler deploy --minify --env development
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_REF_NAME == "develop"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "develop"'
