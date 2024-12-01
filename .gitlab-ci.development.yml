@@ -1,59 +1,21 @@
-stages:
-  - build
-  - test
-  - deploy
+build_development:
+  extends: .build_template
+  variables:
+    TARGET_BRANCH: develop
 
-variables:
-  NODE_ENV: development
-  CF_API_TOKEN: $DEV_CF_API_TOKEN  # Set in GitLab CI/CD variables
-  CF_ACCOUNT_ID: $DEV_CF_ACCOUNT_ID  # Set in GitLab CI/CD variables
-
-cache:
-  key: "$CI_COMMIT_REF_NAME-$(sha256sum package-lock.json | cut -d' ' -f1)"
-  paths:
-    - node_modules/
-
-debug_job:
-  stage: build
-  image: node:18
-  script:
-    - env | sort
-  rules:
-    - when: always
-
-build:
-  stage: build
-  image: node:18
-  before_script:
-    - npm install
-  script:
-    - npm run build
-  artifacts:
-    paths:
-      - dist/
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"'
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "develop"'
-
-test:
-  stage: test
-  image: node:18
+test_development:
+  extends: .test_template
   dependencies:
-    - build
-  script:
-    - npm run test
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"'
+    - build_development
+  variables:
+    TARGET_BRANCH: develop
 
-deploy:
-  stage: deploy
-  image: node:18
+deploy_development:
+  extends: .deploy_template
   dependencies:
-    - build
-  before_script:
-    - npm install -g wrangler
-    - export CLOUDFLARE_API_TOKEN=$CF_API_TOKEN
-  script:
-    - npx wrangler deploy --minify --env development
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "develop"'
+    - build_development
+  variables:
+    TARGET_BRANCH: develop
+    NODE_ENV: development
+    CF_API_TOKEN: $DEV_CF_API_TOKEN
+    CF_ACCOUNT_ID: $DEV_CF_ACCOUNT_ID

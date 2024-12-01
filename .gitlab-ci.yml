@@ -2,3 +2,46 @@ include:
   - local: .gitlab-ci.development.yml
   - local: .gitlab-ci.staging.yml
   - local: .gitlab-ci.production.yml
+
+stages:
+  - build
+  - test
+  - deploy
+
+default:
+  image: node:18
+  cache:
+    key: "$CI_COMMIT_REF_NAME-$(sha256sum package-lock.json | cut -d' ' -f1)"
+    paths:
+      - node_modules/
+  before_script:
+    - npm install
+  artifacts:
+    paths:
+      - dist/
+
+# Shared job templates
+.build_template:
+  stage: build
+  script:
+    - npm run build
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "${TARGET_BRANCH}"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "${TARGET_BRANCH}"'
+
+.test_template:
+  stage: test
+  script:
+    - npm run test
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "${TARGET_BRANCH}"'
+
+.deploy_template:
+  stage: deploy
+  before_script:
+    - npm install -g wrangler
+    - export CLOUDFLARE_API_TOKEN=$CF_API_TOKEN
+  script:
+    - npx wrangler deploy --minify --env $NODE_ENV
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "${TARGET_BRANCH}"'
