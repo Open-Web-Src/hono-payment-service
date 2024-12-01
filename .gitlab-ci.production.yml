@@ -1,21 +1,23 @@
 build_production:
   extends: .build_template
-  variables:
-    TARGET_BRANCH: main
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "main"'
 
 test_production:
   extends: .test_template
   dependencies:
     - build_production
-  variables:
-    TARGET_BRANCH: main
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
 
 deploy_production:
   extends: .deploy_template
   dependencies:
     - build_production
   variables:
-    TARGET_BRANCH: main
     NODE_ENV: production
     CF_API_TOKEN: $PROD_CF_API_TOKEN
     CF_ACCOUNT_ID: $PROD_CF_ACCOUNT_ID
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "main"'
