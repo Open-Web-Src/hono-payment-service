@@ -19,8 +19,12 @@ read_secure_file:
   stage: test
   script:
     - echo "Listing secure files in $CI_SECURE_FILES_DIR:"
-    - ls $CI_SECURE_FILES_DIR
-    - echo "Reading contents of .env file:"
-    - cat $CI_SECURE_FILES_DIR/.dev.vars
+    - ls -la $CI_SECURE_FILES_DIR || echo "No secure files found!"
+    - echo "Attempting to read .dev.vars file:"
+    - if [ -f "$CI_SECURE_FILES_DIR/.dev.vars" ]; then
+        cat "$CI_SECURE_FILES_DIR/.dev.vars";
+      else
+        echo "Secure file '.dev.vars' not found in $CI_SECURE_FILES_DIR!";
+      fi
   rules:
     - when: always
