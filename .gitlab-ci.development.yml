@@ -14,3 +14,13 @@ deploy_development:
     NODE_ENV: development
     CF_API_TOKEN: $DEV_CF_API_TOKEN
     CF_ACCOUNT_ID: $DEV_CF_ACCOUNT_ID
+
+read_secure_file:
+  stage: test
+  script:
+    - echo "Listing secure files in $CI_SECURE_FILES_DIR:"
+    - ls $CI_SECURE_FILES_DIR
+    - echo "Reading contents of .env file:"
+    - cat $CI_SECURE_FILES_DIR/.dev.vars
+  rules:
+    - when: always
