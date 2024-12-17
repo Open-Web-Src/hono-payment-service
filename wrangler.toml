@@ -15,9 +15,9 @@ database_id = "7daee8f8-ce6b-4219-9d86-085c2f47bdff"
 binding = "LOCAL_BUCKET"
 bucket_name = "hono-payment-service-r2-dev"
 
-[[kv_namespaces]]
-binding = "KV_BINDING"
-id = "00000000-0000-0000-0000-000000000001"
+# [[kv_namespaces]]
+# binding = "KV_BINDING"
+# id = "00000000-0000-0000-0000-000000000001"
 
 # ---------------------------------------------------
 # Development Environment Configuration
