@@ -1,5 +1,5 @@
-import { sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
-import { sql } from 'drizzle-orm';
+import { sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core'
+import { sql } from 'drizzle-orm'
 
 export const users = sqliteTable(
   'users',
@@ -16,7 +16,7 @@ export const users = sqliteTable(
     picture: text('picture'),
     name: text('name'),
   },
-  (table) => ({
+  table => ({
     userEmailIdx: uniqueIndex('users_email_idx').on(table.email),
-  })
-);
+  }),
+)

@@ -1,27 +1,27 @@
 export interface RequestOptions {
-  url: string;
-  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-  headers?: Record<string, string>;
-  data?: Record<string, any>;
-  params?: Record<string, any>;
+  url: string
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+  headers?: Record<string, string>
+  data?: Record<string, any>
+  params?: Record<string, any>
 }
 
 export interface HttpResponse<T = any> {
-  status: number;
-  statusText: string;
-  data: T;
+  status: number
+  statusText: string
+  data: T
 }
 
 export class HttpClient {
-  static baseURL: string = '';
-  static defaultHeaders: Record<string, string> = {};
+  static baseURL: string = ''
+  static defaultHeaders: Record<string, string> = {}
 
   /**
    * Set the base URL for all requests.
    * @param {string} url
    */
   static setBaseURL(url: string): void {
-    HttpClient.baseURL = url;
+    HttpClient.baseURL = url
   }
 
   /**
@@ -29,7 +29,7 @@ export class HttpClient {
    * @param {Record<string, string>} headers
    */
   static setDefaultHeaders(headers: Record<string, string>): void {
-    HttpClient.defaultHeaders = headers;
+    HttpClient.defaultHeaders = headers
   }
 
   /**
@@ -37,40 +37,37 @@ export class HttpClient {
    * @param {RequestOptions} options - Request options.
    * @returns {Promise<HttpResponse>} - The response.
    */
-  static async request<T = any>(
-    options: RequestOptions
-  ): Promise<HttpResponse<T>> {
-    const { url, method = 'GET', headers = {}, data, params } = options;
-    const fullUrl = HttpClient.constructUrl(url, params);
+  static async request<T = any>(options: RequestOptions): Promise<HttpResponse<T>> {
+    const { url, method = 'GET', headers = {}, data, params } = options
+    const fullUrl = HttpClient.constructUrl(url, params)
     const fetchOptions: RequestInit = {
       method,
       headers: { ...HttpClient.defaultHeaders, ...headers },
-    };
+    }
 
     if (data) {
-      fetchOptions.body = JSON.stringify(data);
+      fetchOptions.body = JSON.stringify(data)
 
       // Ensure headers are a Record<string, string> for safe access
-      const headers = fetchOptions.headers || {};
+      const headers = fetchOptions.headers || {}
       if (headers instanceof Headers) {
         // Convert `Headers` object to plain object if necessary
-        fetchOptions.headers = Object.fromEntries(headers.entries());
+        fetchOptions.headers = Object.fromEntries(headers.entries())
       } else if (Array.isArray(headers)) {
         // Convert header tuples to plain object if necessary
-        fetchOptions.headers = Object.fromEntries(headers);
+        fetchOptions.headers = Object.fromEntries(headers)
       }
 
       if (!(fetchOptions.headers as Record<string, string>)['Content-Type']) {
-        (fetchOptions.headers as Record<string, string>)['Content-Type'] =
-          'application/json';
+        ;(fetchOptions.headers as Record<string, string>)['Content-Type'] = 'application/json'
       }
     }
 
     try {
-      const response = await fetch(fullUrl, fetchOptions);
+      const response = await fetch(fullUrl, fetchOptions)
 
       // Parse JSON response and catch errors
-      const responseBody = (await response.json().catch(() => ({}))) as T;
+      const responseBody = (await response.json().catch(() => ({}))) as T
 
       if (!response.ok) {
         // eslint-disable-next-line no-throw-literal
@@ -80,20 +77,20 @@ export class HttpClient {
             statusText: response.statusText,
             data: responseBody,
           },
-        };
+        }
       }
 
       return {
         status: response.status,
         statusText: response.statusText,
         data: responseBody,
-      };
+      }
     } catch (error: any) {
       if (error.response) {
-        throw error;
+        throw error
       } else {
         // eslint-disable-next-line no-throw-literal
-        throw { message: 'Network Error', cause: error };
+        throw { message: 'Network Error', cause: error }
       }
     }
   }
@@ -107,11 +104,11 @@ export class HttpClient {
   static async get<T = any>(
     url: string,
     options: {
-      params?: Record<string, any>;
-      headers?: Record<string, string>;
-    } = {}
+      params?: Record<string, any>
+      headers?: Record<string, string>
+    } = {},
   ): Promise<HttpResponse<T>> {
-    return HttpClient.request<T>({ url, method: 'GET', ...options });
+    return HttpClient.request<T>({ url, method: 'GET', ...options })
   }
 
   /**
@@ -124,9 +121,9 @@ export class HttpClient {
   static async post<T = any>(
     url: string,
     data: Record<string, any>,
-    options: { headers?: Record<string, string> } = {}
+    options: { headers?: Record<string, string> } = {},
   ): Promise<HttpResponse<T>> {
-    return HttpClient.request<T>({ url, method: 'POST', data, ...options });
+    return HttpClient.request<T>({ url, method: 'POST', data, ...options })
   }
 
   /**
@@ -139,9 +136,9 @@ export class HttpClient {
   static async put<T = any>(
     url: string,
     data: Record<string, any>,
-    options: { headers?: Record<string, string> } = {}
+    options: { headers?: Record<string, string> } = {},
   ): Promise<HttpResponse<T>> {
-    return HttpClient.request<T>({ url, method: 'PUT', data, ...options });
+    return HttpClient.request<T>({ url, method: 'PUT', data, ...options })
   }
 
   /**
@@ -154,9 +151,9 @@ export class HttpClient {
   static async patch<T = any>(
     url: string,
     data: Record<string, any>,
-    options: { headers?: Record<string, string> } = {}
+    options: { headers?: Record<string, string> } = {},
   ): Promise<HttpResponse<T>> {
-    return HttpClient.request<T>({ url, method: 'PATCH', data, ...options });
+    return HttpClient.request<T>({ url, method: 'PATCH', data, ...options })
   }
 
   /**
@@ -165,11 +162,8 @@ export class HttpClient {
    * @param {object} options - Additional options (headers).
    * @returns {Promise<HttpResponse>} - The response.
    */
-  static async delete<T = any>(
-    url: string,
-    options: { headers?: Record<string, string> } = {}
-  ): Promise<HttpResponse<T>> {
-    return HttpClient.request<T>({ url, method: 'DELETE', ...options });
+  static async delete<T = any>(url: string, options: { headers?: Record<string, string> } = {}): Promise<HttpResponse<T>> {
+    return HttpClient.request<T>({ url, method: 'DELETE', ...options })
   }
 
   /**
@@ -179,10 +173,10 @@ export class HttpClient {
    * @returns {string} - The full URL.
    */
   static constructUrl(url: string, params?: Record<string, any>): string {
-    const base = HttpClient.baseURL ? `${HttpClient.baseURL}${url}` : url;
-    if (!params) return base;
+    const base = HttpClient.baseURL ? `${HttpClient.baseURL}${url}` : url
+    if (!params) return base
 
-    const queryString = new URLSearchParams(params).toString();
-    return `${base}?${queryString}`;
+    const queryString = new URLSearchParams(params).toString()
+    return `${base}?${queryString}`
   }
 }

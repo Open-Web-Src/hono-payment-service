@@ -1,1 +1,1 @@
-export * from './exception-prefixes.constant';
+export * from './exception-prefixes.constant'

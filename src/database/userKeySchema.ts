@@ -1,5 +1,5 @@
-import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
-import { users } from './userSchema';
+import { sqliteTable, text } from 'drizzle-orm/sqlite-core'
+import { users } from './userSchema'
 
 export const userKeys = sqliteTable('user_keys', {
   id: text('id').primaryKey(),
@@ -8,4 +8,4 @@ export const userKeys = sqliteTable('user_keys', {
     .references(() => users.id),
   hashed_password: text('hashed_password').notNull(),
   salt: text('salt').notNull(),
-});
+})

@@ -1,5 +1,5 @@
-import { initializeLuciaUser } from '~/utils';
+import { initializeLuciaUser } from '~/utils'
 
 declare global {
-  type LuciaUserType = ReturnType<typeof initializeLuciaUser>;
+  type LuciaUserType = ReturnType<typeof initializeLuciaUser>
 }

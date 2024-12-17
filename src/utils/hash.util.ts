@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcryptjs'
 
 /**
  * Hashes a password using a provided salt.
@@ -7,7 +7,7 @@ import bcrypt from 'bcryptjs';
  * @returns The hashed password.
  */
 export function hashPassword(password: string, salt: string): string {
-  return bcrypt.hashSync(password, salt);
+  return bcrypt.hashSync(password, salt)
 }
 
 /**
@@ -16,7 +16,7 @@ export function hashPassword(password: string, salt: string): string {
  * @returns The generated salt.
  */
 export function generateSalt(rounds: number = 10): string {
-  return bcrypt.genSaltSync(rounds);
+  return bcrypt.genSaltSync(rounds)
 }
 
 /**
@@ -26,5 +26,5 @@ export function generateSalt(rounds: number = 10): string {
  * @returns True if the password matches, false otherwise.
  */
 export function verifyPassword(password: string, hashedPassword: string) {
-  return bcrypt.compareSync(password, hashedPassword);
+  return bcrypt.compareSync(password, hashedPassword)
 }

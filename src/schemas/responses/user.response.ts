@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const getMeResponseSchema = z.object({
   id: z.string().uuid(),
@@ -6,6 +6,6 @@ export const getMeResponseSchema = z.object({
   name: z.string().nullable(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
-});
+})
 
-export type GetMeResponse = z.infer<typeof getMeResponseSchema>;
+export type GetMeResponse = z.infer<typeof getMeResponseSchema>
