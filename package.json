@@ -77,6 +77,8 @@
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "0.4.13",
     "@cloudflare/workers-types": "4.20240718.0",
+    "@commitlint/cli": "^19.6.1",
+    "@commitlint/config-conventional": "^19.6.0",
     "@nyxb/eslint-config": "3.0.11",
     "@total-typescript/ts-reset": "0.5.1",
     "@types/axios": "0.9.36",
