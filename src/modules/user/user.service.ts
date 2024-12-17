@@ -1,15 +1,14 @@
-import { Context, Env } from 'hono';
-import { NotFoundException, BadRequestException } from '~/exceptions';
-import { users, userKeys } from '~/database';
-import { eq } from 'drizzle-orm';
-import { bytesToHex } from '@noble/hashes/utils';
-import { hashPassword, generateSalt, newULID } from '~/utils';
+import { Context, Env } from 'hono'
+import { NotFoundException, BadRequestException } from '~/exceptions'
+import { users, userKeys } from '~/database'
+import { eq } from 'drizzle-orm'
+import { hashPassword, generateSalt, newULID } from '~/utils'
 
 export class UserService {
-  private readonly db: DrizzleDatabase;
+  private readonly db: DrizzleDatabase
 
   constructor(private readonly context: Context<Env>) {
-    this.db = context.get('db');
+    this.db = context.get('db')
   }
 
   /**
@@ -17,35 +16,32 @@ export class UserService {
    */
   async getUserByIdOrEmail(identifier: string): Promise<UserWithRelations> {
     const user = await this.db.query.users.findFirst({
-      where: (table, { or, eq }) =>
-        or(eq(table.id, identifier), eq(table.email, identifier.toLowerCase())),
-    });
+      where: (table, { or, eq }) => or(eq(table.id, identifier), eq(table.email, identifier.toLowerCase())),
+    })
 
     if (!user) {
-      throw new NotFoundException(
-        `User with identifier ${identifier} not found`
-      );
+      throw new NotFoundException(`User with identifier ${identifier} not found`)
     }
 
-    return user;
+    return user
   }
 
   /**
    * Get all users
    */
   async getAllUsers() {
-    return await this.db.query.users.findMany();
+    return await this.db.query.users.findMany()
   }
 
   /**
    * Create a new user
    */
   async createUser(payload: { email: string; name: string; password: string }) {
-    const userId = newULID('user');
-    const keyId = `email:${payload.email.toLowerCase()}`;
+    const userId = newULID('user')
+    const keyId = `email:${payload.email.toLowerCase()}`
 
-    const salt = generateSalt();
-    const hashedPassword = hashPassword(payload.password, salt);
+    const salt = generateSalt()
+    const hashedPassword = hashPassword(payload.password, salt)
 
     try {
       await this.db.batch([
@@ -60,15 +56,15 @@ export class UserService {
           hashed_password: hashedPassword,
           salt,
         }),
-      ]);
+      ])
     } catch (error: any) {
       if (error.message.includes('UNIQUE constraint failed: users.email')) {
-        throw new BadRequestException('Email already exists');
+        throw new BadRequestException('Email already exists')
       }
-      throw new BadRequestException('Failed to create user');
+      throw new BadRequestException('Failed to create user')
     }
 
-    return { userId, email: payload.email };
+    return { userId, email: payload.email }
   }
 
   /**
@@ -77,31 +73,27 @@ export class UserService {
   async updateUser(
     userId: string,
     payload: Partial<{
-      email: string;
-      name: string;
-      status: 'active' | 'inactive';
-    }>
+      email: string
+      name: string
+      status: 'active' | 'inactive'
+    }>,
   ) {
-    const user = await this.getUserByIdOrEmail(userId);
+    const user = await this.getUserByIdOrEmail(userId)
 
-    const updatedUser = await this.db
-      .update(users)
-      .set(payload)
-      .where(eq(users.id, user.id))
-      .returning();
+    const updatedUser = await this.db.update(users).set(payload).where(eq(users.id, user.id)).returning()
 
-    return updatedUser[0];
+    return updatedUser[0]
   }
 
   /**
    * Delete a user
    */
   async deleteUser(userId: string) {
-    const user = await this.getUserByIdOrEmail(userId);
+    const user = await this.getUserByIdOrEmail(userId)
 
-    await this.db.delete(users).where(eq(users.id, user.id));
-    await this.db.delete(userKeys).where(eq(userKeys.user_id, user.id));
+    await this.db.delete(users).where(eq(users.id, user.id))
+    await this.db.delete(userKeys).where(eq(userKeys.user_id, user.id))
 
-    return { message: `User with ID ${userId} deleted successfully` };
+    return { message: `User with ID ${userId} deleted successfully` }
   }
 }

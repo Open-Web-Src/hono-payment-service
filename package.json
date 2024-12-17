@@ -2,12 +2,13 @@
   "name": "hono-payment-service",
   "scripts": {
     "start": "wrangler dev",
-    "lint": "eslint ./src",
-    "lint:fix": "eslint ./src --fix",
+    "lint": "eslint \"{src,test}/**/*.ts\" --fix",
+    "format": "prettier --write \"{src,test}/**/*.{ts,js,json,md}\"",
+    "lint:lint-staged": "lint-staged",
     "prepare": "husky",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings src/types/worker-configuration.d.ts",
     "build": "echo 'No build step needed for this project.'",
-    "test": "DEBUG=miniflare* npx vitest",
+    "test": "DEBUG=miniflare* npx vitest run",
     "test:coverage": "vitest run --coverage",
     "db:up": "drizzle-kit up",
     "debug:development": "wrangler dev --env development",
@@ -45,6 +46,21 @@
     "kv:put:development": "CLOUDFLARE_ACCOUNT_ID=da2118e5e245a38de1d09069a057afe2 wrangler kv:key put --binding=\"{kv_namespace}\" \"{kv_key}\" \"{kv_value}\" --env development",
     "kv:put:staging": "CLOUDFLARE_ACCOUNT_ID=da2118e5e245a38de1d09069a057afe2 wrangler kv:key put --binding=\"{kv_namespace}\" \"{kv_key}\" \"{kv_value}\" --env staging",
     "kv:put:production": "CLOUDFLARE_ACCOUNT_ID=da2118e5e245a38de1d09069a057afe2 wrangler kv:key put --binding=\"{kv_namespace}\" \"{kv_key}\" \"{kv_value}\" --env production"
+  },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+      "prettier --write"
+    ],
+    "{!(package)*.json,*.code-snippets,.!(browserslist)*rc}": [
+      "prettier --write--parser json"
+    ],
+    "package.json": [
+      "prettier --write"
+    ],
+    "*.md": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "7.1.1",
@@ -86,9 +102,16 @@
     "@types/lodash": "4.17.10",
     "@types/pica": "9.0.4",
     "@types/uuid": "10.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.18.1",
+    "@typescript-eslint/parser": "^8.18.1",
     "@vitest/coverage-istanbul": "1.5",
     "drizzle-kit": "^0.23.0",
-    "eslint": "^8.57.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.11",
+    "prettier": "^3.4.2",
     "vitest": "1.5",
     "wrangler": "3.65.1"
   }

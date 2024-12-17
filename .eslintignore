@@ -1,0 +1,14 @@
+node_modules/
+dist/
+public/
+.husky/
+.vscode/
+.idea/
+*.sh
+*.md
+*.woff
+*.ttf
+Dockerfile
+local/
+output.js
+docs/

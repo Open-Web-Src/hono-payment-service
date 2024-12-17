@@ -1,0 +1,11 @@
+node_modules/
+dist/
+public/
+.husky/
+*.svg
+*.sh
+*.json.lock
+*.yaml
+local/
+output.js
+docs/
