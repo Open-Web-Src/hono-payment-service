@@ -27,6 +27,15 @@ main = "src/index.ts"
 compatibility_date = "2024-11-27"
 compatibility_flags = ["nodejs_compat"]
 workers_dev = true
+# routes = [
+#   { pattern = "dev.spiral.tego.global", custom_domain = true }
+# ]
+
+# [env.development.placement]
+# mode = "smart"
+
+# [env.development.vars]
+# VAR_KEY = "value"
 
 [[env.development.d1_databases]]
 binding = "DB"
@@ -58,6 +67,15 @@ main = "src/index.ts"
 compatibility_date = "2024-11-27"
 compatibility_flags = ["nodejs_compat"]
 workers_dev = true
+# routes = [
+#   { pattern = "dev.spiral.tego.global", custom_domain = true }
+# ]
+
+# [env.staging.placement]
+# mode = "smart"
+
+# [env.staging.vars]
+# VAR_KEY = "value"
 
 # [[env.staging.d1_databases]]
 # binding = "DB"
@@ -81,6 +99,15 @@ main = "src/index.ts"
 compatibility_date = "2024-11-27"
 compatibility_flags = ["nodejs_compat"]
 workers_dev = true
+# routes = [
+#   { pattern = "dev.spiral.tego.global", custom_domain = true }
+# ]
+
+# [env.production.placement]
+# mode = "smart"
+
+# [env.production.vars]
+# VAR_KEY = "value"
 
 # [[env.production.d1_databases]]
 # binding = "DB"
