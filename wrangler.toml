@@ -1,107 +1,96 @@
 # ---------------------------------------------------
-# Development (Default) Environment Configuration
-name = "hono-social-services"
+# Local Environment Configuration
+name = "hono-payment-service-local"
 main = "src/index.ts"
 compatibility_date = "2024-11-27"
 compatibility_flags = ["nodejs_compat"]
-workers_dev = false
-
-[observability]
-enabled = true
-head_sampling_rate = 1
-
-[placement]
-mode = "smart"
-
-[vars]
-SERVICE_NAME = "spiral-platform-dev"
-ENVIRONMENT = "development"
-API_KEY = 'ilrGDlGWAnw3h6PHXBUfQaf28XHnhnArrexU5ec4jF8FoQa8RKXhldSjd3LruVLYoYzp743TpRcEw07JebWwTeQhcqTiaixAghiDb9Z4CWwVKgKxGcKurDufL5mKxD3z'
-SHOPIFY_API_VERSION = "2024-10"
+workers_dev = true
 
 [[d1_databases]]
 binding = "DB"
-database_name = "spiral-d1-dev"
-database_id = "64f58dae-ef43-497d-a793-1c1810b69347"
+database_name = "hono-payment-service-d1-dev"
+database_id = "7daee8f8-ce6b-4219-9d86-085c2f47bdff"
+
+[[r2_buckets]]
+binding = "LOCAL_BUCKET"
+bucket_name = "hono-payment-service-r2-dev"
+
+# [[kv_namespaces]]
+# binding = "KV_BINDING"
+# id = "00000000-0000-0000-0000-000000000001"
+
+# ---------------------------------------------------
+# Development Environment Configuration
+[env.development]
+name = "hono-payment-service-dev"
+main = "src/index.ts"
+compatibility_date = "2024-11-27"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+
+[[env.development.d1_databases]]
+binding = "DB"
+database_name = "hono-payment-service-d1-dev"
+database_id = "7daee8f8-ce6b-4219-9d86-085c2f47bdff"
 # WARNING: Using `preview_database_id` is discouraged for production-like environments.
 # Preview configurations are for testing and not intended for production workflows.
 # Instead, export production data and import it into local databases for safe testing.
-preview_database_id = "64f58dae-ef43-497d-a793-1c1810b69347"
+preview_database_id = "7daee8f8-ce6b-4219-9d86-085c2f47bdff"
 
-[[r2_buckets]]
+[[env.development.r2_buckets]]
 binding = "DEV_BUCKET"
-bucket_name = "spiral-r2-dev"
+bucket_name = "hono-payment-service-r2-dev"
 # WARNING: Using `preview_bucket_name` is discouraged for production-like environments.
 # Preview configurations are for testing and not intended for production workflows.
 # Instead, export production data and import it into local databases for safe testing.
-preview_bucket_name = "spiral-r2-dev"
+preview_bucket_name = "hono-payment-service-r2-dev"
 
-[[kv_namespaces]]
-binding = "ORDER_STATUS_OFFSET"
-id = "e407399d538348f096eaa5fec09c6ac7"
-preview_id = "ef63f8c436cf49d68cc4c359fc67036b"
+# [[env.development.kv_namespaces]]
+# binding = "KV_BINDING"
+# id = "namespace-id-dev"
+# preview_id = "preview-namespace-id-dev"
 
 # ---------------------------------------------------
 # Staging Environment Configuration
 [env.staging]
-name = "spiral-platform-stg"
+name = "hono-payment-service-stg"
 main = "src/index.ts"
-compatibility_date = "2024-09-03"
+compatibility_date = "2024-11-27"
 compatibility_flags = ["nodejs_compat"]
-workers_dev = false
+workers_dev = true
 
-[[env.staging.routes]]
-pattern = "https://stg.spiral.tego.global/api/v1/*"
-zone_name = "tego.global"
+# [[env.staging.d1_databases]]
+# binding = "DB"
+# database_name = "hono-payment-service-d1-stg"
+# database_id = "d1-id-stg"
 
-[env.staging.vars]
-SERVICE_NAME = "spiral-platform-stg"
-ENVIRONMENT = "staging"
-API_KEY = 'ilrGDlGWAnw3h6PHXBUfQaf28XHnhnArrexU5ec4jF8FoQa8RKXhldSjd3LruVLYoYzp743TpRcEw07JebWwTeQhcqTiaixAghiDb9Z4CWwVKgKxGcKurDufL5mKxD3z'
-SHOPIFY_API_VERSION = "2024-10"
+# [[env.staging.r2_buckets]]
+# binding = "STAGING_BUCKET"
+# bucket_name = "hono-payment-service-r2-stg"
 
-[[env.staging.d1_databases]]
-binding = "DB"
-database_name = "spiral-d1-stg"
-database_id = "d122cf9e-9f64-42bf-a8c9-89126461fc4d"
-
-[[env.staging.r2_buckets]]
-binding = "STAGING_BUCKET"
-bucket_name = "spiral-r2-stg"
-
-[[env.staging.kv_namespaces]]
-binding = "ORDER_STATUS_OFFSET"
-id = "namespace-id-stg"
+# [[env.staging.kv_namespaces]]
+# binding = "KV_BINDING"
+# id = "namespace-id-stg"
 
 
 # ---------------------------------------------------
 # Production Environment Configuration
 [env.production]
-name = "spiral-platform-prod"
+name = "hono-payment-service-prod"
 main = "src/index.ts"
-compatibility_date = "2024-09-03"
+compatibility_date = "2024-11-27"
 compatibility_flags = ["nodejs_compat"]
-workers_dev = false
+workers_dev = true
 
-[[env.production.routes]]
-pattern = "https://spiral.tego.global/api/v1/*"
-zone_name = "tego.global"
+# [[env.production.d1_databases]]
+# binding = "DB"
+# database_name = "hono-payment-service-d1-prod"
+# database_id = "d1-id-prod"
 
-[env.production.vars]
-SERVICE_NAME = "spiral-platform-prod"
-ENVIRONMENT = "production"
-API_KEY = ''
-SHOPIFY_API_VERSION = "2024-10"
+# [[env.production.r2_buckets]]
+# binding = "PROD_BUCKET"
+# bucket_name = "hono-payment-service-r2-prod"
 
-[[env.production.d1_databases]]
-binding = "DB"
-database_name = "spiral-d1-prod"
-database_id = "d0b24132-ca34-4c96-b0b9-239b513803ae"
-
-[[env.production.r2_buckets]]
-binding = "PROD_BUCKET"
-bucket_name = "spiral-r2-prod"
-
-[[env.production.kv_namespaces]]
-binding = "ORDER_STATUS_OFFSET"
-id = "namespace-id-prod"
+# [[env.production.kv_namespaces]]
+# binding = "KV_BINDING"
+# id = "namespace-id-prod"

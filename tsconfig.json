@@ -1,35 +1,33 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "jsx": "react-jsx",
-    "jsxImportSource": "hono/jsx",
+    "target": "ESNext", // Modern JS target
+    "jsx": "react-jsx", // JSX support for Hono
+    "jsxImportSource": "hono/jsx", // JSX runtime for Hono
     "lib": [
       "esnext"
-    ],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    ], // Include latest ES libraries
+    "module": "ESNext", // Module system for ESNext
+    "moduleResolution": "bundler", // Resolve imports for bundlers like Vite
+    "baseUrl": ".", // Root directory for resolving modules
     "paths": {
       "~/*": [
-        "./src/*"
-      ],
-      "@templates/*": [
-        "./templates/*"
-      ]
+        "src/*"
+      ] // Map `~` to the `src` folder
     },
-    "resolveJsonModule": true,
+    "resolveJsonModule": true, // Allow importing JSON files
     "types": [
       "@cloudflare/workers-types",
       "vitest/globals",
       "@cloudflare/workers-types/experimental",
       "@cloudflare/vitest-pool-workers"
     ],
-    "allowJs": true,
-    "checkJs": false,
-    "strict": true,
-    "noEmit": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "skipLibCheck": true
-  }
+    "allowJs": true, // Enable JS files in the project
+    "checkJs": false, // Skip type-checking JS files
+    "strict": true, // Enable all strict type checks
+    "noEmit": true, // Prevent emitting compiled files
+    "allowSyntheticDefaultImports": true, // Allow default imports for ESModules
+    "forceConsistentCasingInFileNames": true, // Prevent inconsistent imports
+    "isolatedModules": true, // Ensure compatibility with ESModules
+    "skipLibCheck": true // Skip type-checking for dependencies
+  },
 }
