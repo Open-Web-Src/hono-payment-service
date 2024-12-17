@@ -5,6 +5,7 @@
     "lint": "eslint \"{src,test}/**/*.ts\" --fix",
     "format": "prettier --write \"{src,test}/**/*.{ts,js,json,md}\"",
     "lint:lint-staged": "lint-staged",
+    "commit": "npx git-cz",
     "prepare": "husky",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings src/types/worker-configuration.d.ts",
     "build": "echo 'No build step needed for this project.'",
@@ -62,6 +63,11 @@
       "prettier --write"
     ]
   },
+  "config": {
+    "commitizen": {
+      "path": "cz-git"
+    }
+  },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "7.1.1",
     "@hono/swagger-ui": "0.4.1",
@@ -105,6 +111,8 @@
     "@typescript-eslint/eslint-plugin": "^8.18.1",
     "@typescript-eslint/parser": "^8.18.1",
     "@vitest/coverage-istanbul": "1.5",
+    "commitizen": "^4.3.1",
+    "cz-git": "^1.11.0",
     "drizzle-kit": "^0.23.0",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
