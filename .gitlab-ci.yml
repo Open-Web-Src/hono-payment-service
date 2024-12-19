@@ -20,6 +20,9 @@ default:
     paths:
       - dist/
 
+variables:
+  GIT_STRATEGY: clone
+
 # Shared job templates
 .build_template:
   stage: build
