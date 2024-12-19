@@ -27,6 +27,21 @@ export class UserService {
   }
 
   /**
+   * Get a user by Stripe Customer ID
+   */
+  async getUserByStripeCustomerId(customerId: string): Promise<UserWithRelations> {
+    const user = await this.db.query.users.findFirst({
+      where: table => eq(table.stripe_customer_id, customerId),
+    })
+
+    if (!user) {
+      throw new NotFoundException(`User with Stripe Customer ID ${customerId} not found`)
+    }
+
+    return user
+  }
+
+  /**
    * Get all users
    */
   async getAllUsers() {
@@ -70,18 +85,9 @@ export class UserService {
   /**
    * Update a user
    */
-  async updateUser(
-    userId: string,
-    payload: Partial<{
-      email: string
-      name: string
-      status: 'active' | 'inactive'
-    }>,
-  ) {
+  async updateUser(userId: string, payload: Partial<User>) {
     const user = await this.getUserByIdOrEmail(userId)
-
     const updatedUser = await this.db.update(users).set(payload).where(eq(users.id, user.id)).returning()
-
     return updatedUser[0]
   }
 

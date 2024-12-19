@@ -15,6 +15,7 @@ export const users = sqliteTable(
     email: text('email').unique(),
     picture: text('picture'),
     name: text('name'),
+    stripe_customer_id: text('stripe_customer_id').unique(),
   },
   table => ({
     userEmailIdx: uniqueIndex('users_email_idx').on(table.email),

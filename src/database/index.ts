@@ -1,4 +1,7 @@
 export * from './userSchema'
 export * from './userSessionSchema'
 export * from './userKeySchema'
+export * from './paymentMethodsSchema'
+export * from './paymentsSchema'
+export * from './subscriptionsSchema'
 export * from './relations'

@@ -5,7 +5,7 @@ import { cors } from 'hono/cors'
 import { setupDb, setupLucia, requestLogger } from '~/middlewares'
 import { responseInterceptor } from '~/interceptors'
 import { globalExceptionsFilter } from '~/filters'
-import { AUTH_ENDPOINT, USER_ENDPOINT } from '~/modules'
+import { AUTH_ENDPOINT, PAYMENT_ENDPOINT, USER_ENDPOINT } from '~/modules'
 
 const apiV1 = new OpenAPIHono()
 
@@ -55,10 +55,10 @@ apiV1.use(requestLogger())
 // Apply the response interceptor middleware globally
 apiV1.use('*', responseInterceptor())
 
+// API routing here
 apiV1.route('/auth', AUTH_ENDPOINT.default)
 apiV1.route('/user', USER_ENDPOINT.default)
-
-// API routing here
+apiV1.route('/payment', PAYMENT_ENDPOINT.default)
 
 // Global error handler
 apiV1.onError(globalExceptionsFilter)
