@@ -8,6 +8,7 @@ import {
   getPaymentMethodsDocs,
   getPaymentHistoryDocs,
   downloadInvoiceDocs,
+  unlinkPaymentMethodDocs,
 } from './payment.docs'
 
 const app = new OpenAPIHono()
@@ -85,6 +86,21 @@ app.openapi(createRoute(downloadInvoiceDocs('/download-invoice/:invoiceId')), as
     return c.json({ invoicePdfUrl }, 200)
   } catch (error: any) {
     console.error(`Failed to download invoice: ${error.message}`)
+    return c.json({ error: error.message }, 500)
+  }
+})
+
+app.openapi(createRoute(unlinkPaymentMethodDocs('/unlink-payment-method')), async c => {
+  const { paymentMethodId } = await c.req.json()
+  const userId = c.get('user')?.id
+
+  const stripeService = new StripeService(c)
+
+  try {
+    const response = await stripeService.unlinkPaymentMethod(userId!, paymentMethodId)
+    return c.json(response, 200)
+  } catch (error: any) {
+    console.error(`Failed to unlink payment method: ${error.message}`)
     return c.json({ error: error.message }, 500)
   }
 })

@@ -26,6 +26,7 @@ export class PaymentService {
       eq(paymentMethods.user_id, userId),
       filters.type ? eq(paymentMethods.type, filters.type) : undefined,
       filters.brand ? eq(paymentMethods.brand, filters.brand) : undefined,
+      sql`deleted_at IS NULL`,
     ].filter(Boolean)
 
     return await this.db.query.paymentMethods.findMany({
@@ -137,5 +138,15 @@ export class PaymentService {
    */
   async updateSubscriptionStatus(subscriptionId: string, status: string) {
     await this.db.update(subscriptions).set({ status }).where(eq(subscriptions.stripe_subscription_id, subscriptionId))
+  }
+
+  /**
+   * Soft delete a payment method by updating `deleted_at`
+   */
+  async softDeletePaymentMethod(userId: string, paymentMethodId: string) {
+    await this.db
+      .update(paymentMethods)
+      .set({ deleted_at: sql`(strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))` })
+      .where(and(eq(paymentMethods.user_id, userId), eq(paymentMethods.id, paymentMethodId)))
   }
 }

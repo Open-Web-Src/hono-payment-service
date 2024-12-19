@@ -156,3 +156,38 @@ export function downloadInvoiceDocs(path: string): Omit<RouteConfig, 'path'> & {
     },
   }
 }
+
+export function unlinkPaymentMethodDocs(route: string): Omit<RouteConfig, 'path'> & { path: string } {
+  return {
+    summary: 'Unlink a payment method',
+    method: 'post',
+    tags: ['Payment'],
+    middleware: [enforceUserBearerToken()],
+    path: route,
+    request: {
+      body: {
+        content: {
+          'application/json': {
+            schema: z.object({
+              paymentMethodId: z.string().describe('The ID of the payment method to unlink'),
+            }),
+          },
+        },
+        required: true,
+      },
+    },
+    responses: {
+      200: {
+        description: 'Payment method unlinked successfully',
+        content: {
+          'application/json': {
+            schema: z.object({
+              success: z.boolean(),
+              message: z.string(),
+            }),
+          },
+        },
+      },
+    },
+  }
+}

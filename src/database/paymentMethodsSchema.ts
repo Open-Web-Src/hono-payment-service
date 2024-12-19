@@ -16,5 +16,6 @@ export const paymentMethods = sqliteTable('payment_methods', {
   cardholder_name: text('cardholder_name'),
   created_at: text('created_at', { mode: 'text' })
     .default(sql`(strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))`)
-    .notNull(), // Timestamp of when the user was created
+    .notNull(),
+  deleted_at: text('deleted_at', { mode: 'text' }),
 })

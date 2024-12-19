@@ -30,6 +30,25 @@ export class WalletService {
   }
 
   /**
+   * Get the user's wallet details, ensuring it exists
+   */
+  async getWallet(userId: string) {
+    // Ensure the wallet exists
+    await this.ensureWalletExists(userId)
+
+    // Fetch the wallet details
+    const wallet = await this.db.query.userWallets.findFirst({
+      where: eq(userWallets.user_id, userId),
+    })
+
+    if (!wallet) {
+      throw new Error(`Wallet not found for user ID: ${userId}`)
+    }
+
+    return wallet
+  }
+
+  /**
    * Increase the user's wallet balance
    */
   async increaseBalance(userId: string, amount: number) {

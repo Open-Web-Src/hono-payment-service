@@ -197,4 +197,29 @@ export class StripeService {
       throw new Error('Unable to download invoice. Please try again later.')
     }
   }
+
+  /**
+   * Unlink a payment method for a user
+   */
+  async unlinkPaymentMethod(userId: string, paymentMethodId: string) {
+    // Ensure the payment method belongs to the user
+    const paymentMethod = await this.paymentService.getPaymentMethod(userId, paymentMethodId)
+
+    if (!paymentMethod) {
+      throw new BadRequestException('Payment method does not belong to the user or does not exist')
+    }
+
+    try {
+      // Detach the payment method from the customer in Stripe
+      await this.stripe.paymentMethods.detach(paymentMethod.stripe_payment_method_id)
+
+      // Optionally, delete the payment method record from the database
+      await this.paymentService.softDeletePaymentMethod(userId, paymentMethodId)
+
+      return { success: true, message: 'Payment method unlinked successfully' }
+    } catch (error: any) {
+      console.error(`Failed to unlink payment method: ${error.message}`)
+      throw new Error('Unable to unlink payment method. Please try again later.')
+    }
+  }
 }
