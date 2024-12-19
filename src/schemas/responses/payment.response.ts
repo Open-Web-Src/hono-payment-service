@@ -21,6 +21,10 @@ export const paymentMethodsResponseSchema = z.array(
     type: z.string(),
     last4: z.string(),
     brand: z.string(),
+    exp_month: z.string(),
+    exp_year: z.string(),
+    cardholder_name: z.string(),
+    created_at: z.string(),
   }),
 )
 
@@ -30,6 +34,7 @@ export const paymentHistoryItemSchema = z.object({
   amount: z.number(),
   status: z.string(),
   created_at: z.string().datetime(),
+  brand: z.string().nullable(),
 })
 
 // Extend pagination response schema for payment history

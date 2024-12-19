@@ -7,6 +7,7 @@ import {
   createSubscriptionDocs,
   getPaymentMethodsDocs,
   getPaymentHistoryDocs,
+  downloadInvoiceDocs,
 } from './payment.docs'
 
 const app = new OpenAPIHono()
@@ -73,6 +74,19 @@ app.openapi(createRoute(getPaymentHistoryDocs('/payment-history')), async c => {
   const history = await paymentService.getPaymentHistory(userId!, page, limit)
 
   return c.json(history, 200)
+})
+
+app.openapi(createRoute(downloadInvoiceDocs('/download-invoice/:invoiceId')), async c => {
+  const invoiceId = c.req.param('invoiceId')
+
+  const stripeService = new StripeService(c)
+  try {
+    const invoicePdfUrl = await stripeService.downloadInvoice(invoiceId!)
+    return c.json({ invoicePdfUrl }, 200)
+  } catch (error: any) {
+    console.error(`Failed to download invoice: ${error.message}`)
+    return c.json({ error: error.message }, 500)
+  }
 })
 
 export default app

@@ -1,4 +1,4 @@
-import type { RouteConfig } from '@hono/zod-openapi'
+import { z, type RouteConfig } from '@hono/zod-openapi'
 import { enforceUserBearerToken } from '~/middlewares'
 import {
   createSubscriptionRequestSchema,
@@ -127,6 +127,31 @@ export function getPaymentHistoryDocs(route: string): Omit<RouteConfig, 'path'> 
             schema: paymentHistoryResponseSchema,
           },
         },
+      },
+    },
+  }
+}
+
+export function downloadInvoiceDocs(path: string): Omit<RouteConfig, 'path'> & { path: string } {
+  return {
+    method: 'get',
+    path,
+    tags: ['Invoices'],
+    summary: 'Download an Invoice as a PDF',
+    description: 'Retrieve and directly download a PDF of the specified invoice.',
+    request: {
+      params: z.object({
+        invoiceId: z.string().describe('The ID of the invoice to download'),
+      }),
+    },
+    responses: {
+      200: {
+        content: {
+          'application/pdf': {
+            schema: z.string().describe('The PDF URL of the invoice'),
+          },
+        },
+        description: 'Successfully retrieved the invoice PDF',
       },
     },
   }

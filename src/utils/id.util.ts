@@ -89,6 +89,7 @@ export const prefixes = {
   keyAuth: 'key_auth', // <-- this is internal and does not need to be short or pretty
   test: 'test', // <-- for tests only
   otp: 'otp',
+  wallet: 'wl',
 } as const
 
 export function newId(prefix: keyof typeof prefixes, length: 'short' | 'long' = 'short'): string {

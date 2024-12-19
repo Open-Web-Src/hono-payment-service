@@ -1,0 +1,1 @@
+ALTER TABLE `payments` ADD `type` text DEFAULT 'top-up' NOT NULL;
