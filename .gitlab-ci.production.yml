@@ -1,5 +1,10 @@
+lint_production:
+  extends: .lint_template
+
 build_production:
   extends: .build_template
+  artifacts:
+    paths: []
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "main"'
@@ -11,8 +16,28 @@ test_production:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
 
+test_coverage_production:
+  extends: .test_coverage_template
+  dependencies:
+    - build_production
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+
+deploy_migrate_db_production:
+  extends: .deploy_migrate_db_template
+  dependencies:
+    - deploy_update_env_production
+  variables:
+    NODE_ENV: production
+    CF_API_TOKEN: $PROD_CF_API_TOKEN
+    CF_ACCOUNT_ID: $PROD_CF_ACCOUNT_ID
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "main"'
+
 deploy_production:
   extends: .deploy_template
+  needs:
+    - deploy_migrate_db_production
   dependencies:
     - build_production
   variables:
@@ -21,3 +46,11 @@ deploy_production:
     CF_ACCOUNT_ID: $PROD_CF_ACCOUNT_ID
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "main"'
+
+# Manual jobs
+manual_update_env_production:
+  extends: .manual_update_env_template
+  variables:
+    NODE_ENV: production
+    CF_API_TOKEN: $DEV_CF_API_TOKEN
+    CF_ACCOUNT_ID: $DEV_CF_ACCOUNT_ID

@@ -1,13 +1,33 @@
+lint_development:
+  extends: .lint_template
+
 build_development:
   extends: .build_template
+  artifacts:
+    # Override artifacts: No artifacts declared as build does not generate dist yet
+    paths: []
 
 test_development:
   extends: .test_template
   dependencies:
     - build_development
 
+test_coverage_development:
+  extends: .test_coverage_template
+  dependencies:
+    - build_development
+
+deploy_migrate_db_development:
+  extends: .deploy_migrate_db_template
+  variables:
+    NODE_ENV: development
+    CF_API_TOKEN: $DEV_CF_API_TOKEN
+    CF_ACCOUNT_ID: $DEV_CF_ACCOUNT_ID
+
 deploy_development:
   extends: .deploy_template
+  needs:
+    - deploy_migrate_db_development
   dependencies:
     - build_development
   variables:
@@ -15,19 +35,10 @@ deploy_development:
     CF_API_TOKEN: $DEV_CF_API_TOKEN
     CF_ACCOUNT_ID: $DEV_CF_ACCOUNT_ID
 
-read_secure_file:
-  stage: test
+# Manual jobs
+manual_update_env_development:
+  extends: .manual_update_env_template
   variables:
-    SECURE_FILES_DOWNLOAD_PATH: './secure_files/'  # Optional: Customize the download path
-  script:
-    # Download and execute the secure files tool
-    - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-    # Check if files were downloaded correctly
-    - echo "Listing secure files in ${SECURE_FILES_DOWNLOAD_PATH:-.secure_files}:"
-    - ls -la ${SECURE_FILES_DOWNLOAD_PATH:-.secure_files}
-    # Attempt to read the secure file
-    - echo "Reading contents of .dev.vars:"
-    - cat ${SECURE_FILES_DOWNLOAD_PATH:-.secure_files}/.dev.vars || echo "Secure file '.dev.vars' not found!"
-  rules:
-    - when: always
-
+    NODE_ENV: development
+    CF_API_TOKEN: $DEV_CF_API_TOKEN
+    CF_ACCOUNT_ID: $DEV_CF_ACCOUNT_ID
