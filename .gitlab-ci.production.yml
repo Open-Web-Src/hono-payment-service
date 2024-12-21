@@ -4,6 +4,7 @@ lint_production:
 build_production:
   extends: .build_template
   artifacts:
+    # Override artifacts: No artifacts declared as build does not generate dist yet
     paths: []
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
@@ -38,7 +39,6 @@ deploy_production:
   extends: .deploy_template
   needs:
     - deploy_migrate_db_production
-  dependencies:
     - build_production
   variables:
     NODE_ENV: production

@@ -28,7 +28,6 @@ deploy_development:
   extends: .deploy_template
   needs:
     - deploy_migrate_db_development
-  dependencies:
     - build_development
   variables:
     NODE_ENV: development
