@@ -8,6 +8,7 @@ stages:
   - build
   - test
   - deploy
+  - manual
 
 default:
   image: node:18
@@ -56,6 +57,7 @@ variables:
 .test_coverage_template:
   stage: test
   script:
+    - apt-get update && apt-get install -y bc
     - npm run test:coverage
     - COVERAGE=$(grep -oP '<span class="strong">\K\d+\.\d+%' ./coverage/index.html | head -1 | tr -d '%')
     - echo "Coverage is $COVERAGE%"
@@ -89,6 +91,7 @@ variables:
 
 # Manual job excluded from pipeline stages
 .manual_update_env_template:
+  stage: manual
   variables:
       SECURE_FILES_DOWNLOAD_PATH: './secure_files/'
   script:
@@ -99,3 +102,4 @@ variables:
     - npm run secret:put:${NODE_ENV:-development}
   rules:
     - when: manual
+    - if: '$CI_PIPELINE_SOURCE == "web"'

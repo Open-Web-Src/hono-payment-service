@@ -1,5 +1,7 @@
 lint_staging:
   extends: .lint_template
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
 
 build_staging:
   extends: .build_template
