@@ -26,8 +26,6 @@ test_coverage_staging:
 
 deploy_migrate_db_staging:
   extends: .deploy_migrate_db_template
-  dependencies:
-    - deploy_update_env_staging
   variables:
     NODE_ENV: staging
     CF_API_TOKEN: $STAGE_CF_API_TOKEN
