@@ -98,7 +98,7 @@ variables:
     - npm install -g wrangler
     - export CLOUDFLARE_API_TOKEN=$CF_API_TOKEN
     - export CF_ACCOUNT_ID=$CF_ACCOUNT_ID # Needed when CLOUDFLARE_API_TOKEN is for multiple accounts
-    - echo "CF_ACCOUNT_ID: $CF_ACCOUNT_ID"
+    - echo ${CF_ACCOUNT_ID}
     - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
     - npm run secret:put:${NODE_ENV:-development}
   when: manual
