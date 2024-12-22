@@ -35,7 +35,7 @@
     "d1:import:production": "wrangler d1 execute DB --file=./.wrangler/tmp/d1/prod-data.sql --env production",
     "r2:create": "wrangler r2 bucket create \"hono-payment-service-r2-dev\"",
     "secret:put": "wrangler secret put \"{secret_key}\"",
-    "secret:put:development": "./set-secrets.sh ./secure_files/.development.vars",
+    "secret:put:development": "./set-secrets.sh ./secure_files/.development.vars development",
     "secret:put:staging": "./set-secrets.sh ./secure_files/.staging.vars staging",
     "secret:put:production": "./set-secrets.sh ./secure_files/.production.vars production",
     "kv:create:development": "wrangler kv:namespace create \"{kv_namespace}\" --env development",

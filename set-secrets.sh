@@ -11,9 +11,9 @@ fi
 filename="$1"
 environment="$2"  # Optional, can be empty
 
-# Ensure CF_ACCOUNT_ID is available in the environment
-if [ -z "$CF_ACCOUNT_ID" ]; then
-  echo "Error: CF_ACCOUNT_ID is not set in the environment."
+# Ensure CLOUDFLARE_ACCOUNT_ID is available in the environment
+if [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+  echo "Error: CLOUDFLARE_ACCOUNT_ID is not set in the environment."
   exit 1
 fi
 
@@ -42,4 +42,4 @@ while IFS= read -r line || [ -n "$line" ]; do
   fi
 done < "$filename"
 
-echo "All secrets set for CF_ACCOUNT_ID: $CF_ACCOUNT_ID ${environment:+in environment: $environment}"
+echo "All secrets set for CLOUDFLARE_ACCOUNT_ID: $CLOUDFLARE_ACCOUNT_ID ${environment:+in environment: $environment}"

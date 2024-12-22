@@ -74,7 +74,6 @@ variables:
       SECURE_FILES_DOWNLOAD_PATH: './secure_files/'
   script:
     - npm install -g wrangler
-    - echo "CF_ACCOUNT_ID is ${CF_ACCOUNT_ID}"
     - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
     - npm run secret:put:${NODE_ENV:-development}
   rules:
