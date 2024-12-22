@@ -22,7 +22,7 @@ deploy_update_env_development:
   variables:
     NODE_ENV: development
     CLOUDFLARE_API_TOKEN: $DEV_CF_API_TOKEN
-    CF_ACCOUNT_ID: $DEV_CF_ACCOUNT_ID
+    CLOUDFLARE_ACCOUNT_ID: $DEV_CF_ACCOUNT_ID
 
 deploy_migrate_db_development:
   extends: .deploy_migrate_db_template
@@ -31,7 +31,7 @@ deploy_migrate_db_development:
   variables:
     NODE_ENV: development
     CLOUDFLARE_API_TOKEN: $DEV_CF_API_TOKEN
-    CF_ACCOUNT_ID: $DEV_CF_ACCOUNT_ID
+    CLOUDFLARE_ACCOUNT_ID: $DEV_CF_ACCOUNT_ID
 
 deploy_development:
   extends: .deploy_template
@@ -41,4 +41,4 @@ deploy_development:
   variables:
     NODE_ENV: development
     CLOUDFLARE_API_TOKEN: $DEV_CF_API_TOKEN
-    CF_ACCOUNT_ID: $DEV_CF_ACCOUNT_ID
+    CLOUDFLARE_ACCOUNT_ID: $DEV_CF_ACCOUNT_ID

@@ -31,7 +31,7 @@ deploy_update_env_staging:
   variables:
     NODE_ENV: staging
     CLOUDFLARE_API_TOKEN: $STAGE_CF_API_TOKEN
-    CF_ACCOUNT_ID: $STAGE_CF_ACCOUNT_ID
+    CLOUDFLARE_ACCOUNT_ID: $STAGE_CF_ACCOUNT_ID
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "staging"'
 
@@ -42,7 +42,7 @@ deploy_migrate_db_staging:
   variables:
     NODE_ENV: staging
     CLOUDFLARE_API_TOKEN: $STAGE_CF_API_TOKEN
-    CF_ACCOUNT_ID: $STAGE_CF_ACCOUNT_ID
+    CLOUDFLARE_ACCOUNT_ID: $STAGE_CF_ACCOUNT_ID
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "staging"'
 
@@ -54,6 +54,6 @@ deploy_staging:
   variables:
     NODE_ENV: staging
     CLOUDFLARE_API_TOKEN: $STAGE_CF_API_TOKEN
-    CF_ACCOUNT_ID: $STAGE_CF_ACCOUNT_ID
+    CLOUDFLARE_ACCOUNT_ID: $STAGE_CF_ACCOUNT_ID
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "staging"'
