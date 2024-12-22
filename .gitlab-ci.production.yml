@@ -54,3 +54,4 @@ manual_update_env_production:
     NODE_ENV: production
     CF_API_TOKEN: $DEV_CF_API_TOKEN
     CF_ACCOUNT_ID: $DEV_CF_ACCOUNT_ID
+  manual_confirmation: 'Are you sure you want to update environment secrets for production?'

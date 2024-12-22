@@ -100,5 +100,5 @@ variables:
     - export CF_ACCOUNT_ID=$CF_ACCOUNT_ID # Needed when CLOUDFLARE_API_TOKEN is for multiple accounts
     - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
     - npm run secret:put:${NODE_ENV:-development}
-  rules:
-    - when: manual
+  when: manual
+  manual_confirmation: 'Are you sure you want to update environment secrets for development?'
