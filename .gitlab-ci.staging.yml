@@ -26,11 +26,22 @@ test_coverage_staging:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
 
-deploy_migrate_db_staging:
-  extends: .deploy_migrate_db_template
+deploy_update_env_staging:
+  extends: .deploy_update_env_template
   variables:
     NODE_ENV: staging
-    CF_API_TOKEN: $STAGE_CF_API_TOKEN
+    CLOUDFLARE_API_TOKEN: $STAGE_CF_API_TOKEN
+    CF_ACCOUNT_ID: $STAGE_CF_ACCOUNT_ID
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "staging"'
+
+deploy_migrate_db_staging:
+  extends: .deploy_migrate_db_template
+  needs:
+    - deploy_update_env_staging
+  variables:
+    NODE_ENV: staging
+    CLOUDFLARE_API_TOKEN: $STAGE_CF_API_TOKEN
     CF_ACCOUNT_ID: $STAGE_CF_ACCOUNT_ID
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "staging"'
@@ -42,16 +53,7 @@ deploy_staging:
     - build_staging
   variables:
     NODE_ENV: staging
-    CF_API_TOKEN: $STAGE_CF_API_TOKEN
+    CLOUDFLARE_API_TOKEN: $STAGE_CF_API_TOKEN
     CF_ACCOUNT_ID: $STAGE_CF_ACCOUNT_ID
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "staging"'
-
-# Manual jobs
-manual_update_env_staging:
-  extends: .manual_update_env_template
-  variables:
-    NODE_ENV: staging
-    CF_API_TOKEN: $STAGE_CF_API_TOKEN
-    CF_ACCOUNT_ID: $STAGE_CF_ACCOUNT_ID
-  manual_confirmation: 'Are you sure you want to update environment secrets for staging?'

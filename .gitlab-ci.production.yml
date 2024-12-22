@@ -26,11 +26,22 @@ test_coverage_production:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
 
-deploy_migrate_db_production:
-  extends: .deploy_migrate_db_template
+deploy_update_env_production:
+  extends: .deploy_update_env_template
   variables:
     NODE_ENV: production
-    CF_API_TOKEN: $PROD_CF_API_TOKEN
+    CLOUDFLARE_API_TOKEN: $PROD_CF_API_TOKEN
+    CF_ACCOUNT_ID: $PROD_CF_ACCOUNT_ID
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "main"'
+
+deploy_migrate_db_production:
+  extends: .deploy_update_env_production
+  needs:
+    - deploy_migrate_db_production
+  variables:
+    NODE_ENV: production
+    CLOUDFLARE_API_TOKEN: $PROD_CF_API_TOKEN
     CF_ACCOUNT_ID: $PROD_CF_ACCOUNT_ID
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "main"'
@@ -42,16 +53,7 @@ deploy_production:
     - build_production
   variables:
     NODE_ENV: production
-    CF_API_TOKEN: $PROD_CF_API_TOKEN
+    CLOUDFLARE_API_TOKEN: $PROD_CF_API_TOKEN
     CF_ACCOUNT_ID: $PROD_CF_ACCOUNT_ID
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "main"'
-
-# Manual jobs
-manual_update_env_production:
-  extends: .manual_update_env_template
-  variables:
-    NODE_ENV: production
-    CF_API_TOKEN: $PROD_CF_API_TOKEN
-    CF_ACCOUNT_ID: $PROD_CF_ACCOUNT_ID
-  manual_confirmation: 'Are you sure you want to update environment secrets for production?'

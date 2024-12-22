@@ -8,7 +8,6 @@ stages:
   - build
   - test
   - deploy
-  - manual
 
 default:
   image: node:18
@@ -24,7 +23,7 @@ variables:
 
 # Shared job templates with following rules:
 # 1. Create Merge Request (MR): lint -> build -> test
-# 2. Merged to Target Branch: build -> fetch_env -> deploy
+# 2. Merged to Target Branch: build -> deploy
 
 .lint_template:
   stage: lint
@@ -69,12 +68,22 @@ variables:
     paths:
       - coverage/
 
+.deploy_update_env_template:
+  stage: deploy
+  variables:
+      SECURE_FILES_DOWNLOAD_PATH: './secure_files/'
+  script:
+    - npm install -g wrangler
+    - echo "CF_ACCOUNT_ID is ${CF_ACCOUNT_ID}"
+    - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+    - npm run secret:put:${NODE_ENV:-development}
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "develop"'
+
 .deploy_migrate_db_template:
   stage: deploy
   script:
     - npm install -g wrangler
-    - export CLOUDFLARE_API_TOKEN=$CF_API_TOKEN
-    - export CF_ACCOUNT_ID=$CF_ACCOUNT_ID
     - npm run migration:apply:${NODE_ENV:-development}
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "develop"'
@@ -83,23 +92,6 @@ variables:
   stage: deploy
   script:
     - npm install -g wrangler
-    - export CLOUDFLARE_API_TOKEN=$CF_API_TOKEN
-    - export CF_ACCOUNT_ID=$CF_ACCOUNT_ID # Needed when CLOUDFLARE_API_TOKEN is for multiple accounts
     - npm run deploy:${NODE_ENV:-development}
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "develop"'
-
-# Manual job excluded from pipeline stages
-.manual_update_env_template:
-  stage: manual
-  variables:
-      SECURE_FILES_DOWNLOAD_PATH: './secure_files/'
-  script:
-    - npm install -g wrangler
-    - export CLOUDFLARE_API_TOKEN=$CF_API_TOKEN
-    - export CF_ACCOUNT_ID=$CF_ACCOUNT_ID # Needed when CLOUDFLARE_API_TOKEN is for multiple accounts
-    - echo ${CF_ACCOUNT_ID}
-    - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-    - npm run secret:put:${NODE_ENV:-development}
-  when: manual
-  manual_confirmation: 'Are you sure you want to update environment secrets for development?'
