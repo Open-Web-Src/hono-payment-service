@@ -1,0 +1,1 @@
+ALTER TABLE `payments` ADD `invoice_id` text DEFAULT '';

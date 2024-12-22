@@ -1,5 +1,13 @@
+lint_staging:
+  extends: .lint_template
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
+
 build_staging:
   extends: .build_template
+  artifacts:
+    # Override artifacts: No artifacts declared as build does not generate dist yet
+    paths: []
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "staging"'
@@ -11,13 +19,41 @@ test_staging:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
 
+test_coverage_staging:
+  extends: .test_coverage_template
+  dependencies:
+    - build_staging
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
+
+deploy_update_env_staging:
+  extends: .deploy_update_env_template
+  variables:
+    NODE_ENV: staging
+    CLOUDFLARE_API_TOKEN: $STAGE_CF_API_TOKEN
+    CF_ACCOUNT_ID: $STAGE_CF_ACCOUNT_ID
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "staging"'
+
+deploy_migrate_db_staging:
+  extends: .deploy_migrate_db_template
+  needs:
+    - deploy_update_env_staging
+  variables:
+    NODE_ENV: staging
+    CLOUDFLARE_API_TOKEN: $STAGE_CF_API_TOKEN
+    CF_ACCOUNT_ID: $STAGE_CF_ACCOUNT_ID
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "staging"'
+
 deploy_staging:
   extends: .deploy_template
-  dependencies:
+  needs:
+    - deploy_migrate_db_staging
     - build_staging
   variables:
     NODE_ENV: staging
-    CF_API_TOKEN: $STAGE_CF_API_TOKEN
+    CLOUDFLARE_API_TOKEN: $STAGE_CF_API_TOKEN
     CF_ACCOUNT_ID: $STAGE_CF_ACCOUNT_ID
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "staging"'

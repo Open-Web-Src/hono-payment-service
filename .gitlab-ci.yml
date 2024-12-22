@@ -4,6 +4,7 @@ include:
   - local: .gitlab-ci.production.yml
 
 stages:
+  - lint
   - build
   - test
   - deploy
@@ -16,11 +17,24 @@ default:
       - node_modules/
   before_script:
     - npm install
-  artifacts:
-    paths:
-      - dist/
 
-# Shared job templates
+variables:
+  GIT_STRATEGY: clone
+
+# Shared job templates with following rules:
+# 1. Create Merge Request (MR): lint -> build -> test
+# 2. Merged to Target Branch: build -> deploy
+
+.lint_template:
+  stage: lint
+  script:
+    # Validate lint rules
+    - npm run lint
+    # Check formatting without applying changes
+    - npx prettier --check "{src,test}/**/*.{ts,js,json,md}"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"'
+
 .build_template:
   stage: build
   script:
@@ -28,6 +42,9 @@ default:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"'
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "develop"'
+  artifacts:
+    paths:
+      - dist/
 
 .test_template:
   stage: test
@@ -36,12 +53,45 @@ default:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"'
 
+.test_coverage_template:
+  stage: test
+  script:
+    - apt-get update && apt-get install -y bc
+    - npm run test:coverage
+    - COVERAGE=$(grep -oP '<span class="strong">\K\d+\.\d+%' ./coverage/index.html | head -1 | tr -d '%')
+    - echo "Coverage is $COVERAGE%"
+    - if [ $(echo "$COVERAGE < 20" | bc -l) -eq 1 ]; then echo "Coverage below 80%!"; exit 1; fi
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"'
+  coverage: '/Coverage is (\d+\.\d+)/'
+  artifacts:
+    paths:
+      - coverage/
+
+.deploy_update_env_template:
+  stage: deploy
+  variables:
+      SECURE_FILES_DOWNLOAD_PATH: './secure_files/'
+  script:
+    - npm install -g wrangler
+    - echo "CF_ACCOUNT_ID is ${CF_ACCOUNT_ID}"
+    - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+    - npm run secret:put:${NODE_ENV:-development}
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "develop"'
+
+.deploy_migrate_db_template:
+  stage: deploy
+  script:
+    - npm install -g wrangler
+    - npm run migration:apply:${NODE_ENV:-development}
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "develop"'
+
 .deploy_template:
   stage: deploy
-  before_script:
-    - npm install -g wrangler
-    - export CLOUDFLARE_API_TOKEN=$CF_API_TOKEN
   script:
-    - npx wrangler deploy --minify --env $NODE_ENV
+    - npm install -g wrangler
+    - npm run deploy:${NODE_ENV:-development}
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "develop"'

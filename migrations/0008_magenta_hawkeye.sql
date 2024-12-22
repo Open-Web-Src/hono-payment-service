@@ -1,0 +1,1 @@
+ALTER TABLE `payments` ADD `payment_method_id` text REFERENCES payment_methods(id);

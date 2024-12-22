@@ -1,22 +1,123 @@
-#:schema node_modules/wrangler/config-schema.json
-name = "hono-social-services"
+# ---------------------------------------------------
+# Local Environment Configuration
+name = "hono-payment-service-local"
 main = "src/index.ts"
 compatibility_date = "2024-11-27"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
 
-# Workers Logs
-# Docs: https://developers.cloudflare.com/workers/observability/logs/workers-logs/
-# Configuration: https://developers.cloudflare.com/workers/observability/logs/workers-logs/#enable-workers-logs
-[observability]
-enabled = true
+[[d1_databases]]
+binding = "DB"
+database_name = "hono-payment-service-d1-dev"
+database_id = "7daee8f8-ce6b-4219-9d86-085c2f47bdff"
 
+[[r2_buckets]]
+binding = "LOCAL_BUCKET"
+bucket_name = "hono-payment-service-r2-dev"
+
+[[kv_namespaces]]
+binding = "KV_BINDING"
+id = "00000000-0000-0000-0000-000000000001"
+
+# ---------------------------------------------------
+# Development Environment Configuration
 [env.development]
-name = "hono-social-services-dev"
-vars = { ENV = "development" }
+name = "hono-payment-service-dev"
+main = "src/index.ts"
+compatibility_date = "2024-11-27"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+# routes = [
+#   { pattern = "dev.spiral.tego.global", custom_domain = true }
+# ]
 
+# [env.development.placement]
+# mode = "smart"
+
+# [env.development.vars]
+# VAR_KEY = "value"
+
+[[env.development.d1_databases]]
+binding = "DB"
+database_name = "hono-payment-service-d1-dev"
+database_id = "7daee8f8-ce6b-4219-9d86-085c2f47bdff"
+# WARNING: Using `preview_database_id` is discouraged for production-like environments.
+# Preview configurations are for testing and not intended for production workflows.
+# Instead, export production data and import it into local databases for safe testing.
+preview_database_id = "7daee8f8-ce6b-4219-9d86-085c2f47bdff"
+
+[[env.development.r2_buckets]]
+binding = "DEV_BUCKET"
+bucket_name = "hono-payment-service-r2-dev"
+# WARNING: Using `preview_bucket_name` is discouraged for production-like environments.
+# Preview configurations are for testing and not intended for production workflows.
+# Instead, export production data and import it into local databases for safe testing.
+preview_bucket_name = "hono-payment-service-r2-dev"
+
+# [[env.development.kv_namespaces]]
+# binding = "KV_BINDING"
+# id = "namespace-id-dev"
+# preview_id = "preview-namespace-id-dev"
+
+# ---------------------------------------------------
+# Staging Environment Configuration
 [env.staging]
-name = "hono-social-services-staging"
-vars = { ENV = "staging" }
+name = "hono-payment-service-stg"
+main = "src/index.ts"
+compatibility_date = "2024-11-27"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+# routes = [
+#   { pattern = "dev.spiral.tego.global", custom_domain = true }
+# ]
 
+# [env.staging.placement]
+# mode = "smart"
+
+# [env.staging.vars]
+# VAR_KEY = "value"
+
+# [[env.staging.d1_databases]]
+# binding = "DB"
+# database_name = "hono-payment-service-d1-stg"
+# database_id = "d1-id-stg"
+
+# [[env.staging.r2_buckets]]
+# binding = "STAGING_BUCKET"
+# bucket_name = "hono-payment-service-r2-stg"
+
+# [[env.staging.kv_namespaces]]
+# binding = "KV_BINDING"
+# id = "namespace-id-stg"
+
+
+# ---------------------------------------------------
+# Production Environment Configuration
 [env.production]
-name = "hono-social-services-prod"
-vars = { ENV = "production" }
+name = "hono-payment-service-prod"
+main = "src/index.ts"
+compatibility_date = "2024-11-27"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+# routes = [
+#   { pattern = "dev.spiral.tego.global", custom_domain = true }
+# ]
+
+# [env.production.placement]
+# mode = "smart"
+
+# [env.production.vars]
+# VAR_KEY = "value"
+
+# [[env.production.d1_databases]]
+# binding = "DB"
+# database_name = "hono-payment-service-d1-prod"
+# database_id = "d1-id-prod"
+
+# [[env.production.r2_buckets]]
+# binding = "PROD_BUCKET"
+# bucket_name = "hono-payment-service-r2-prod"
+
+# [[env.production.kv_namespaces]]
+# binding = "KV_BINDING"
+# id = "namespace-id-prod"

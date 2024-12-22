@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Stripe</title>
+        <script src="https://js.stripe.com/v3/"></script>
+    </head>
+    <body>
+        <form id="setup-form">
+            <div id="payment-element"></div>
+            <button type="submit">Save Payment Method</button>
+        </form>
+
+        <script>
+            const stripe = Stripe('pk_test_51QUrpZQwRo0WgELJhEc1NKIjXzzfCjFgpJpF9jsBeJ0FNRJcx1x1atB2DAYjelT4C6nlcXiR9n6oYwUL8ton1dVy00EWFHCCE6'); // Replace with your Stripe publishable key
+            const clientSecret = 'seti_1QXlCUQwRo0WgELJRBAppmzu_secret_RQcR636cQHS2QMpM88zNmmolMntLzPp'; // Replace with the client secret from your backend
+
+            const elements = stripe.elements({clientSecret});
+            
+            const paymentElement = elements.create('payment');
+            paymentElement.mount('#payment-element');
+
+            const form = document.getElementById('setup-form');
+            form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const { setupIntent, error } = await stripe.confirmSetup({
+                elements,
+                confirmParams: {
+                    return_url: 'https://spiral-tawny.vercel.app', // Optional redirect URL
+                },
+            });
+
+            if (error) {
+                console.error(error.message);
+            } else {
+                console.log('Payment method saved:', setupIntent.payment_method);
+            }
+            });
+        </script>
+    </body>
+</html>
