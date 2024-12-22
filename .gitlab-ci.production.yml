@@ -36,9 +36,9 @@ deploy_update_env_production:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "main"'
 
 deploy_migrate_db_production:
-  extends: .deploy_update_env_production
+  extends: .deploy_migrate_db_template
   needs:
-    - deploy_migrate_db_production
+    - deploy_update_env_production
   variables:
     NODE_ENV: production
     CLOUDFLARE_API_TOKEN: $PROD_CF_API_TOKEN
