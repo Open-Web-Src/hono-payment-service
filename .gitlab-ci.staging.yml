@@ -52,6 +52,6 @@ manual_update_env_staging:
   extends: .manual_update_env_template
   variables:
     NODE_ENV: staging
-    CF_API_TOKEN: $DEV_CF_API_TOKEN
-    CF_ACCOUNT_ID: $DEV_CF_ACCOUNT_ID
+    CF_API_TOKEN: $STAGE_CF_API_TOKEN
+    CF_ACCOUNT_ID: $STAGE_CF_ACCOUNT_ID
   manual_confirmation: 'Are you sure you want to update environment secrets for staging?'
