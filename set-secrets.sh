@@ -35,6 +35,11 @@ while IFS= read -r line || [ -n "$line" ]; do
   if [[ $line != \#* ]] && [[ $line != //* ]] && [[ -n "$line" ]]; then
     key=$(echo "$line" | cut -d'=' -f1)
     value=$(echo "$line" | cut -d'=' -f2-)
+
+    # Display the key and value for debugging purposes
+    echo "Key: $key"
+    echo "Value: $value"  # For debugging purposes only
+    
     echo "Setting $key for the ${environment:-default} environment..."
     
     # Set the secret using `printf` to handle multi-line values correctly
