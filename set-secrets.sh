@@ -36,10 +36,6 @@ while IFS= read -r line || [ -n "$line" ]; do
     key=$(echo "$line" | cut -d'=' -f1)
     value=$(echo "$line" | cut -d'=' -f2-)
 
-    # Display the key and value for debugging purposes
-    echo "Key: $key"
-    echo "Value: $value"  # For debugging purposes only
-    
     echo "Setting $key for the ${environment:-default} environment..."
     
     # Set the secret using `printf` to handle multi-line values correctly
