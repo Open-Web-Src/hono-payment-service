@@ -9,6 +9,7 @@ export class R2Service {
   }
 
   getR2Bucket(env: any) {
+    console.log(env.ENVIRONMENT)
     // Centralize the logic for selecting the R2 bucket based on the environment
     if (env.ENVIRONMENT === 'production') {
       return env.PROD_BUCKET
