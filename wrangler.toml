@@ -28,7 +28,7 @@ compatibility_date = "2024-11-27"
 compatibility_flags = ["nodejs_compat"]
 workers_dev = true
 # routes = [
-#   { pattern = "dev.spiral.tego.global", custom_domain = true }
+#   { pattern = "dev.app.com", custom_domain = true }
 # ]
 
 # [env.development.placement]
@@ -68,7 +68,7 @@ compatibility_date = "2024-11-27"
 compatibility_flags = ["nodejs_compat"]
 workers_dev = true
 # routes = [
-#   { pattern = "dev.spiral.tego.global", custom_domain = true }
+#   { pattern = "stg.app.com", custom_domain = true }
 # ]
 
 # [env.staging.placement]
@@ -93,14 +93,14 @@ bucket_name = "hono-payment-service-r2-stg"
 
 # ---------------------------------------------------
 # Production Environment Configuration
-[env.production]
-name = "hono-payment-service-prod"
-main = "src/index.ts"
-compatibility_date = "2024-11-27"
-compatibility_flags = ["nodejs_compat"]
-workers_dev = true
+# [env.production]
+# name = "hono-payment-service-prod"
+# main = "src/index.ts"
+# compatibility_date = "2024-11-27"
+# compatibility_flags = ["nodejs_compat"]
+# workers_dev = true
 # routes = [
-#   { pattern = "dev.spiral.tego.global", custom_domain = true }
+#   { pattern = "app.com", custom_domain = true }
 # ]
 
 # [env.production.placement]

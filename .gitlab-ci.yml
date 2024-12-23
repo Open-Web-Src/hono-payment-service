@@ -92,6 +92,7 @@ variables:
   script:
     - npm install -g wrangler
     - npm run cf-typegen:${NODE_ENV:-development} # Run type generation for the environment
+    - cat src/types/worker-configuration.d.ts # Display the generated file
     - npm run deploy:${NODE_ENV:-development} # Deploy to the specified environment
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "develop"'
