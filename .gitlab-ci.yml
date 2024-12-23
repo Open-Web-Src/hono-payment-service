@@ -91,6 +91,7 @@ variables:
   stage: deploy
   script:
     - npm install -g wrangler
-    - npm run deploy:${NODE_ENV:-development}
+    - npm run cf-typegen:${NODE_ENV:-development} # Run type generation for the environment
+    - npm run deploy:${NODE_ENV:-development} # Deploy to the specified environment
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "develop"'
