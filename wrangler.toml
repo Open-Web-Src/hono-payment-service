@@ -9,15 +9,15 @@ workers_dev = true
 [[d1_databases]]
 binding = "DB"
 database_name = "hono-payment-service-d1-dev"
-database_id = "7daee8f8-ce6b-4219-9d86-085c2f47bdff"
+database_id = "0oooo0o0-oo0o-000-0o00-000o0o00oooo"
 
 [[r2_buckets]]
 binding = "LOCAL_BUCKET"
-bucket_name = "hono-payment-service-r2-dev"
+bucket_name = "hono-payment-service-r2-local"
 
-[[kv_namespaces]]
-binding = "KV_BINDING"
-id = "00000000-0000-0000-0000-000000000001"
+# [[kv_namespaces]]
+# binding = "KV_BINDING"
+# id = "00000000-0000-0000-0000-000000000001"
 
 # ---------------------------------------------------
 # Development Environment Configuration
@@ -40,11 +40,11 @@ workers_dev = true
 [[env.development.d1_databases]]
 binding = "DB"
 database_name = "hono-payment-service-d1-dev"
-database_id = "7daee8f8-ce6b-4219-9d86-085c2f47bdff"
+database_id = "1f898ac7-b7f1-481d-9aaf-31c2f6634b79"
 # WARNING: Using `preview_database_id` is discouraged for production-like environments.
 # Preview configurations are for testing and not intended for production workflows.
 # Instead, export production data and import it into local databases for safe testing.
-preview_database_id = "7daee8f8-ce6b-4219-9d86-085c2f47bdff"
+preview_database_id = "1f898ac7-b7f1-481d-9aaf-31c2f6634b79"
 
 [[env.development.r2_buckets]]
 binding = "DEV_BUCKET"
@@ -77,14 +77,14 @@ workers_dev = true
 # [env.staging.vars]
 # VAR_KEY = "value"
 
-# [[env.staging.d1_databases]]
-# binding = "DB"
-# database_name = "hono-payment-service-d1-stg"
-# database_id = "d1-id-stg"
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "hono-payment-service-d1-stg"
+database_id = "d683e841-6212-4495-9746-313e1992599b"
 
-# [[env.staging.r2_buckets]]
-# binding = "STAGING_BUCKET"
-# bucket_name = "hono-payment-service-r2-stg"
+[[env.staging.r2_buckets]]
+binding = "STAGING_BUCKET"
+bucket_name = "hono-payment-service-r2-stg"
 
 # [[env.staging.kv_namespaces]]
 # binding = "KV_BINDING"

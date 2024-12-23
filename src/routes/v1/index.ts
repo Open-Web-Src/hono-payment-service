@@ -5,7 +5,7 @@ import { cors } from 'hono/cors'
 import { setupDb, setupLucia, requestLogger } from '~/middlewares'
 import { responseInterceptor } from '~/interceptors'
 import { globalExceptionsFilter } from '~/filters'
-import { AUTH_ENDPOINT, PAYMENT_ENDPOINT, USER_ENDPOINT } from '~/modules'
+import { AUTH_ENDPOINT, PAYMENT_ENDPOINT, USER_ENDPOINT, R2_ENDPOINT } from '~/modules'
 
 const apiV1 = new OpenAPIHono()
 
@@ -59,6 +59,7 @@ apiV1.use('*', responseInterceptor())
 apiV1.route('/auth', AUTH_ENDPOINT.default)
 apiV1.route('/user', USER_ENDPOINT.default)
 apiV1.route('/payment', PAYMENT_ENDPOINT.default)
+apiV1.route('/r2', R2_ENDPOINT.default)
 
 // Global error handler
 apiV1.onError(globalExceptionsFilter)
