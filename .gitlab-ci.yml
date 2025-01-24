@@ -60,7 +60,7 @@ variables:
     - npm run test:coverage
     - COVERAGE=$(grep -oP '<span class="strong">\K\d+\.\d+%' ./coverage/index.html | head -1 | tr -d '%')
     - echo "Coverage is $COVERAGE%"
-    - if [ $(echo "$COVERAGE < 20" | bc -l) -eq 1 ]; then echo "Coverage below 80%!"; exit 1; fi
+    - if [ $(echo "$COVERAGE < 20" | bc -l) -eq 1 ]; then echo "Coverage below 20%!"; exit 1; fi
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"'
   coverage: '/Coverage is (\d+\.\d+)/'
